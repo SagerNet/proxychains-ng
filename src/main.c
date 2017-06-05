@@ -32,18 +32,27 @@ static int usage(char **argv) {
 static const char *dll_name = DLL_NAME;
 
 static char own_dir[256];
+static char lib_dir[256];
 static const char *dll_dirs[] = {
 #ifndef SUPER_SECURE /* CVE-2015-3887 */
 	".",
 #endif
 	own_dir,
-	LIB_DIR,
+	lib_dir,
 	"/lib",
 	"/usr/lib",
 	"/usr/local/lib",
 	"/lib64",
 	NULL
 };
+
+static void set_lib_dir() {
+    const char* base = getenv("SS_LIB_DIR");
+    if (base == NULL || strcmp(base, "") == 0) base = ".";
+    size_t len = strlen(base);
+    memcpy(lib_dir, base, len);
+    lib_dir[len] = 0;
+}
 
 static void set_own_dir(const char *argv0) {
 	size_t l = strlen(argv0);
@@ -109,6 +118,7 @@ int main(int argc, char *argv[]) {
 	// search DLL
 
 	set_own_dir(argv[0]);
+    set_lib_dir();
 
 	i = 0;
 
