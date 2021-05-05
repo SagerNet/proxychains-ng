@@ -725,11 +725,7 @@ int pc_getnameinfo(const struct sockaddr *sa, socklen_t salen,
 	return 0;
 }
 
-#ifdef ANDROID
-struct hostent *gethostbyaddr(const char *addr, int len, int type) {
-#else
 struct hostent *gethostbyaddr(const void *addr, socklen_t len, int type) {
-#endif
 	INIT();
 	PDEBUG("TODO: proper gethostbyaddr hook\n");
 
