@@ -23,8 +23,8 @@
 
 #ifndef __CORE_HEADER
 #define __CORE_HEADER
-#define BUFF_SIZE 8*1024  // used to read responses from proxies.
 #define     MAX_LOCALNET 64
+#define     MAX_DNAT 64
 
 #include "ip_type.h"
 
@@ -41,7 +41,8 @@ typedef enum {
 typedef enum {
 	HTTP_TYPE,
 	SOCKS4_TYPE,
-	SOCKS5_TYPE
+	SOCKS5_TYPE,
+	RAW_TYPE
 } proxy_type;
 
 typedef enum {
@@ -67,6 +68,11 @@ typedef struct {
 	struct in_addr in_addr, netmask;
 	unsigned short port;
 } localaddr_arg;
+
+typedef struct {
+	struct in_addr orig_dst, new_dst;
+	unsigned short orig_port, new_port;
+} dnat_arg;
 
 typedef struct {
 	ip_type ip;
@@ -111,10 +117,11 @@ struct gethostbyname_data {
 	struct hostent hostent_space;
 	in_addr_t resolved_addr;
 	char *resolved_addr_p[2];
-	char addr_name[1024 * 8];
+	char addr_name[256];
 };
 
 struct hostent* proxy_gethostbyname(const char *name, struct gethostbyname_data *data);
+struct hostent* proxy_gethostbyname_old(const char *name);
 
 int proxy_getaddrinfo(const char *node, const char *service,
 		      const struct addrinfo *hints, struct addrinfo **res);
