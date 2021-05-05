@@ -16,3 +16,4 @@ proxychains4
 libtool
 config.*
 stamp-h
+/.idea
